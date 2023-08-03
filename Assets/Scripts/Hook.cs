@@ -35,7 +35,7 @@ public class Hook : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   
+    {       
         CheckHook();
         Shootwire();
         Checkwire();

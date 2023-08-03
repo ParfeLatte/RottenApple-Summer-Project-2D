@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Floor
   - GrapplingObj
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - UI
   - GrapplingObj
   - Wire
-  - 
+  - Wall
   - 
   - 
   - 

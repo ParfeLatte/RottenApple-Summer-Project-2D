@@ -5,7 +5,11 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     public float dir { get; private set; }
+    public float VertDir { get; private set; }
     public bool Jump { get; private set; }
+    public bool ShiftDown { get; private set; }
+    public bool ShiftCheck { get; private set; }
+    public bool ShiftUp { get; private set; }
     public Vector2 MousePosition { get; private set; }
     public bool LeftMouseClick { get; private set; }
 
@@ -27,11 +31,16 @@ public class PlayerInput : MonoBehaviour
     private void GetKeyInput()
     {
         dir = Input.GetAxisRaw("Horizontal");
+        VertDir = Input.GetAxisRaw("Vertical");
         Jump = Input.GetButtonDown("Jump");
         if (Jump)
         {
             Debug.Log("Space ON");
         }
+        ShiftDown = Input.GetKeyDown(KeyCode.LeftShift);
+        ShiftCheck = Input.GetKey(KeyCode.LeftShift);
+        ShiftUp = Input.GetKeyUp(KeyCode.LeftShift);
+        Debug.Log(dir);
     }
 
     private void GetMouseInput()
