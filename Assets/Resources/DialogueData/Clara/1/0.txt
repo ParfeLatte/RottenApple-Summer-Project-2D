@@ -1,0 +1,7 @@
+{
+    "npcName": "Clara",
+    "DialougeNumber": 0,
+    "Name": "Clara",
+    "StandingName": "SusClara",
+    "Dialouge": "안녕 내 이름은 클라라야"
+}

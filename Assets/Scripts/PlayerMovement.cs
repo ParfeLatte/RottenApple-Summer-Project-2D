@@ -6,7 +6,6 @@ public class PlayerMovement : MonoBehaviour
 {
     public System.Action CutWireEvent;
 
-    private PlayerInput playerinput;
     private Rigidbody2D playerRigid;
     private DistanceJoint2D joint;
     private LineRenderer lr;
@@ -43,7 +42,6 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         hook = GetComponentInChildren<Hook>();
-        playerinput = GetComponent<PlayerInput>();
         playerRigid = GetComponent<Rigidbody2D>();
         joint = GetComponent<DistanceJoint2D>();
         lr = GetComponent<LineRenderer>();
@@ -59,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Debug.DrawRay(transform.position, raydir.normalized * 5.5f, Color.red);
         Debug.DrawRay(transform.position, Vector2.right * 0.55f, Color.red);
+        Debug.DrawRay(transform.position, Vector2.down * 0.75f, Color.red);
         if (playerRigid.velocity.y >= 20) { playerRigid.velocity = new Vector2(playerRigid.velocity.x , 20f); }
 
         HoldWall();
@@ -76,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
     private void xMove()
     {
         if (wallCondition == 5) return;
-        moveDistance = new Vector2(playerinput.dir * moveSpeed, playerRigid.velocity.y);
+        moveDistance = new Vector2(PlayerInput.instance.dir * moveSpeed, playerRigid.velocity.y);
         if (!isWire)
         {
             playerRigid.velocity = moveDistance; 
@@ -89,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
     private void Jump()
     {
         if (JumpCount == 0) return;
-        if (playerinput.Jump)
+        if (PlayerInput.instance.Jump)
         {
             if (isWire)
             {
@@ -133,6 +132,29 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
         wallCondition = 0;
     }
+
+    private void CheckFloor()
+    {
+        RaycastHit2D Floor;
+        Floor = Physics2D.Raycast(transform.position, Vector2.down, 0.75f, LayerMask.GetMask("Floor"));
+        if(Floor != null)
+        {
+            JumpCount = 2;
+            CheckWallDir();
+            foreach (GameObject i in jumpCounts)
+            {
+                i.SetActive(true);
+            }
+            wallTime = 0f;
+            isFloor = true;
+            Debug.Log("바닥입니다");
+        }
+        else
+        {
+            Debug.Log("공중입니다");
+            return;
+        }
+    }
     #endregion
     #region Wire
     public void ShootWire(Vector2 Pos)
@@ -171,7 +193,7 @@ public class PlayerMovement : MonoBehaviour
         //if (!isWall) return;
         if (wallCondition == 1 || wallCondition == 3)
         {
-            if (playerinput.ShiftDown)
+            if (PlayerInput.instance.ShiftDown)
             {
                 //isGrab = true;
                 switch (wallCondition)
@@ -195,7 +217,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (wallCondition == 2 || wallCondition == 4)
         {
-            if (playerinput.ShiftUp)
+            if (PlayerInput.instance.ShiftUp)
             {
                 switch (wallCondition)
                 {
@@ -224,10 +246,10 @@ public class PlayerMovement : MonoBehaviour
             wallCondition = 4;
             return;
         }
-        if (playerinput.VertDir == 1f)
+        if (PlayerInput.instance.VertDir == 1f)
         {
             //isGrab = true;
-            moveDistance = new Vector2(0, playerinput.VertDir * 4);
+            moveDistance = new Vector2(0, PlayerInput.instance.VertDir * 4);
             playerRigid.velocity = moveDistance;
             wallTime += Time.deltaTime;
         }
@@ -253,7 +275,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (wallCondition == 0 || wallCondition == 5)
         {
-            if (playerinput.ShiftCheck)
+            if (PlayerInput.instance.ShiftCheck)
             {
                 wallCondition = 2;
                 //walljumpDir *= -1;
@@ -307,14 +329,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Floor"))
         {
-            JumpCount = 2;
-            CheckWallDir();
-            foreach (GameObject i in jumpCounts)
-            {
-                i.SetActive(true);
-            }
-            wallTime = 0f;
-            isFloor = true;
+            CheckFloor();
         }
     }
 

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Hook : MonoBehaviour
 {
-    PlayerInput playerInput;
     CollisionCheck wireCol;
     PlayerMovement p_move;
     CircleCollider2D col;
@@ -23,7 +22,6 @@ public class Hook : MonoBehaviour
     void Awake()
     {
         wireCol = GetComponentInChildren<CollisionCheck>();
-        playerInput = GetComponentInParent<PlayerInput>();
         p_move = GetComponentInParent<PlayerMovement>();
         radius = Vector2.Distance(Center.position, hook.position);
         col = GetComponentInChildren<CircleCollider2D>();
@@ -44,7 +42,7 @@ public class Hook : MonoBehaviour
 
     private void CheckHook()
     {
-        Dir = (playerInput.MousePosition - new Vector2(Center.position.x, Center.position.y)).normalized;
+        Dir = (PlayerInput.instance.MousePosition - new Vector2(Center.position.x, Center.position.y)).normalized;
         pos = Dir * radius;
         distance = Vector2.Distance(Center.position, wire.transform.position);
         if (condition == 0 || condition == 3)
@@ -57,7 +55,7 @@ public class Hook : MonoBehaviour
     private void Shootwire()
     {
         if (condition != 0) return;
-        if (playerInput.LeftMouseClick)
+        if (PlayerInput.instance.LeftMouseClick)
         {
             condition = 1;
             WireDir = Dir;

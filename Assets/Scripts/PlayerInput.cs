@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : Singleton<PlayerInput>
 {
     public float dir { get; private set; }
     public float VertDir { get; private set; }
@@ -13,9 +13,12 @@ public class PlayerInput : MonoBehaviour
     public Vector2 MousePosition { get; private set; }
     public bool LeftMouseClick { get; private set; }
 
+    public bool Interact { get; private set; }
+
     // Start is called before the first frame update
-    void Awake()
-    {   
+    protected override void Awake()
+    {
+        base.Awake();
         dir = 0;
         Jump = false;
     }
@@ -40,7 +43,7 @@ public class PlayerInput : MonoBehaviour
         ShiftDown = Input.GetKeyDown(KeyCode.LeftShift);
         ShiftCheck = Input.GetKey(KeyCode.LeftShift);
         ShiftUp = Input.GetKeyUp(KeyCode.LeftShift);
-        Debug.Log(dir);
+        Interact = Input.GetKeyUp(KeyCode.F);   
     }
 
     private void GetMouseInput()

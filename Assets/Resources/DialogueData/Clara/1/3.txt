@@ -1,0 +1,7 @@
+{
+    "npcName": "Clara",
+    "DialougeNumber": 3,
+    "Name": "Parfe",
+    "StandingName": "SusParfe",
+    "Dialouge": "나는 알바가 가기 싫어"
+}
