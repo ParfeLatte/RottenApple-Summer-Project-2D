@@ -5,6 +5,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public System.Action CutWireEvent;
+    public System.Action WallColEvent;
+    public System.Action WallJumpEvent;
+    public System.Action LandingEvent;
 
     private Rigidbody2D playerRigid;
     private DistanceJoint2D joint;
@@ -122,13 +125,17 @@ public class PlayerMovement : MonoBehaviour
         //isGrab = false;
         //isWall = false;
         wallCondition = 5;
+        if(WallJumpEvent != null)
+        {
+            WallJumpEvent();
+        }
         Debug.Log("Wall Jump");
         playerRigid.velocity = new Vector2(0.8f * walljumpDir * wallJumpPower, 1.2f * wallJumpPower);
         JumpCount--;
-        if (JumpCount != 0)
-        {
-            jumpCounts[JumpCount - 1].SetActive(false);
-        }
+        //if (JumpCount != 0)
+        //{
+        //    jumpCounts[JumpCount - 1].SetActive(false);
+        //}
         yield return new WaitForSeconds(0.15f);
         wallCondition = 0;
     }
@@ -147,6 +154,10 @@ public class PlayerMovement : MonoBehaviour
             }
             wallTime = 0f;
             isFloor = true;
+            if(LandingEvent != null)
+            {
+                LandingEvent();
+            }
             Debug.Log("바닥입니다");
         }
         else
@@ -322,10 +333,18 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
+            if (WallColEvent != null)
+            {
+                WallColEvent();
+            }
             CheckWallDir();
             nextWallCheck();
-            JumpCount = 1;
-            jumpCounts[JumpCount - 1].SetActive(true);
+            JumpCount = 2;
+            //jumpCounts[JumpCount - 1].SetActive(true);
+            foreach (GameObject i in jumpCounts)
+            {
+                i.SetActive(true);
+            }
         }
         if (collision.gameObject.CompareTag("Floor"))
         {
@@ -333,22 +352,25 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    //private void OnCollisionStay2D(Collision2D collision)
-    //{
-    //    Vector2 nextpos; 
-    //    if (collision.gameObject.CompareTag("Wall"))
-    //    {
-    //        CheckWallDir();
-    //        Debug.Log("벽에 붙어있음");
-    //    }
-    //}
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            if (WallColEvent != null)
+            {
+                WallColEvent();
+            }
+        }
+    }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
-            //isWall = false;
-            //isGrab = false;
+            if (WallColEvent != null)
+            {
+                WallColEvent();
+            }
             if (wallCondition != 5)
             {
                 wallCondition = 0;
