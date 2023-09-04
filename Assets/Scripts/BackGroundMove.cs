@@ -5,10 +5,15 @@ using UnityEngine;
 public class BackGroundMove : MonoBehaviour
 {
     [SerializeField] private float ScrollSpeed;
+    [SerializeField] private float FinalSpeed;
+
     [SerializeField] private GameObject player;
     [SerializeField] private PlayerMovement p_move;
+    [SerializeField] private Transform Camera;
+
     [SerializeField] private Vector3 p_LastPos;
     [SerializeField] private Vector3 p_MovedPos;
+
     [SerializeField] private bool isMove;
     [SerializeField] private bool isPlayerWall;
 
@@ -30,6 +35,11 @@ public class BackGroundMove : MonoBehaviour
         };
     }
 
+    private void Start()
+    {
+        FinalSpeed = p_move.returnMoveSpeed() - ScrollSpeed;  
+    }
+
     void Update()
     {
         CheckPlayerMove();
@@ -41,7 +51,7 @@ public class BackGroundMove : MonoBehaviour
         if (!isMove) return;
         if (isPlayerWall) return;
         Vector3 curPos = transform.position;
-        Vector3 nextPos = new Vector3(PlayerInput.instance.dir * -1, 0, 0) * ScrollSpeed * Time.deltaTime;
+        Vector3 nextPos = new Vector3(PlayerInput.instance.dir, 0, 0) * FinalSpeed * Time.deltaTime;
         transform.position = curPos + nextPos;  
     }
     

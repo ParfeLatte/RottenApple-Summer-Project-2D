@@ -11,6 +11,10 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Text DialogueTxt;
     [SerializeField] private Image CharStandImg;
 
+    [Header("GameClear")]
+    [SerializeField] private GameObject ClearBox;
+    public Button NextStage; 
+
     protected override void Awake()
     {
         base.Awake();
@@ -34,6 +38,21 @@ public class UIManager : Singleton<UIManager>
         else
         {
             DialogueBox.SetActive(true);
+        }
+    }
+    #endregion
+
+    #region StageClear
+
+    public void ClearOnoff()
+    {
+        if (ClearBox.activeSelf)
+        {
+            ClearBox.SetActive(false);
+        }
+        else
+        {
+            ClearBox.SetActive(true);
         }
     }
     #endregion

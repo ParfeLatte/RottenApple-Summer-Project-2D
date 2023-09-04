@@ -7,6 +7,9 @@ TagManager:
   - Floor
   - GrapplingObj
   - Wall
+  - GoalObj
+  - TargetObj
+  - resetCol
   layers:
   - Default
   - TransparentFX

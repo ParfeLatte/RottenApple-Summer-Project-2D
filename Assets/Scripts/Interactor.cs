@@ -16,7 +16,7 @@ public class Interactor : MonoBehaviour
     private bool continueInteract = false;
     private State state;
 
-    void Start()
+    void Awake()
     {
         state = State.Disable;
     }
@@ -73,5 +73,10 @@ public class Interactor : MonoBehaviour
     {
         _Npcs.Remove(RemoveNpc);
         state = State.Disable;
+    }
+
+    public void GetTarget()
+    {
+        StageManager.instance.GetTarget();
     }
 }

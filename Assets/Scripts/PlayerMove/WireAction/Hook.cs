@@ -17,6 +17,11 @@ public class Hook : MonoBehaviour
     [SerializeField] private float radius;
     [SerializeField] private float distance;
     private int condition; // 0:idle, 1:wire쏨 2:돌아옴 3:와이어연결됨
+
+    [Header("로프 조정")]
+    [SerializeField] private float wireRange;//이걸로 조정하시면 됩니다.
+    [SerializeField] private float ShootSpeed;//쏠때 속도
+    [SerializeField] private float ReturnSpeed;//돌아올때 속도
     
 
     void Awake()
@@ -67,8 +72,8 @@ public class Hook : MonoBehaviour
     private void Checkwire()
     {
         if (condition != 1) return;
-        Vector2 nextPos = WireDir * 40f * Time.deltaTime;
-        if (distance >= 7f)
+        Vector2 nextPos = WireDir * ShootSpeed * Time.deltaTime;
+        if (distance >= wireRange)
         {
             WireDir = (hook.position - wire.transform.position).normalized;
             col.enabled = false;
@@ -85,9 +90,9 @@ public class Hook : MonoBehaviour
     {
         if (condition != 2) return;
         float wirehookdist = Vector2.Distance(hook.position, wire.transform.position);
-        Vector2 nextPos = WireDir * 60f * Time.deltaTime;
+        Vector2 nextPos = WireDir * ReturnSpeed * Time.deltaTime;
         wire.transform.position += (Vector3)nextPos;
-        if(wirehookdist <= 1f)
+        if(wirehookdist <= 1.5f)
         {
             wire.transform.position = hook.position;
             condition = 0;

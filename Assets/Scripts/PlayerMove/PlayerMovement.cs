@@ -8,11 +8,13 @@ public class PlayerMovement : MonoBehaviour
     public System.Action WallColEvent;
     public System.Action WallJumpEvent;
     public System.Action LandingEvent;
+    public System.Action JumpEvent;
 
     private Rigidbody2D playerRigid;
     private DistanceJoint2D joint;
     private LineRenderer lr;
     private Hook hook;
+    private ResetPosition p_Reset;
 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float wallJumpPower;
@@ -41,13 +43,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool isWallJump;
     [SerializeField] private int wallCondition;//벽 상태 0: 벽에 붙지 않음, 1:벽에 닿아있음, 2:벽을 붙잡음, 3: 벽을 붙잡지 못하는 상태 4: 3의 상태에서 붙잡아서 천천히 내려옴 5: 벽점프
 
-    // Start is called before the first frame update
     void Awake()
     {
         hook = GetComponentInChildren<Hook>();
         playerRigid = GetComponent<Rigidbody2D>();
         joint = GetComponent<DistanceJoint2D>();
         lr = GetComponent<LineRenderer>();
+        p_Reset = GetComponent<ResetPosition>();
         joint.enabled = false;
         isWire = false;
         isWallJump = false;
@@ -55,7 +57,11 @@ public class PlayerMovement : MonoBehaviour
         wallTime = 0;
     }
 
-    // Update is called once per frame
+    private void Start()
+    {
+        p_Reset.ResetPlayer += CheckFloor;
+    }
+
     void Update()
     {
         Debug.DrawRay(transform.position, raydir.normalized * 5.5f, Color.red);
@@ -73,6 +79,10 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    public float returnMoveSpeed()
+    {
+        return moveSpeed;
+    }
 
     #region Move, Jump
     private void xMove()
@@ -116,6 +126,10 @@ public class PlayerMovement : MonoBehaviour
             }
 
             jumpCounts[JumpCount].SetActive(false);
+            if(JumpEvent != null)
+            {
+                JumpEvent();
+            }
         }
         
     }
