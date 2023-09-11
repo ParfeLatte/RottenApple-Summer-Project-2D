@@ -17,7 +17,6 @@ public class PlayerMovement : MonoBehaviour
     private ResetPosition p_Reset;
 
     [SerializeField] private float moveSpeed;
-    [SerializeField] private float wallJumpPower;
     [SerializeField] private float jumpForce;
     [SerializeField] private float walljumpDir;
     [SerializeField] Vector2 moveDistance;
@@ -33,15 +32,18 @@ public class PlayerMovement : MonoBehaviour
     public List<GameObject> jumpCounts = new List<GameObject>();
 
     [SerializeField] private float wallTime;
-
-    [SerializeField] private bool isJump;
-    [SerializeField] private bool isFloor;
-    [SerializeField] private bool isWire;
-    [SerializeField] private bool isWall;
-    [SerializeField] private bool isGrab;
-    [SerializeField] private int JumpCount;
-    [SerializeField] private bool isWallJump;
+    private bool isJump;
+    private bool isFloor;
+    private bool isWire;
+    private bool isWall;
+    private bool isGrab;
+    private int JumpCount;
+    private bool isWallJump;
     [SerializeField] private int wallCondition;//벽 상태 0: 벽에 붙지 않음, 1:벽에 닿아있음, 2:벽을 붙잡음, 3: 벽을 붙잡지 못하는 상태 4: 3의 상태에서 붙잡아서 천천히 내려옴 5: 벽점프
+
+    [Header("WallJump")]
+    [SerializeField] private float wallJumpPower;
+    [SerializeField] private float WallJumpTime;
 
     void Awake()
     {
@@ -150,7 +152,7 @@ public class PlayerMovement : MonoBehaviour
         //{
         //    jumpCounts[JumpCount - 1].SetActive(false);
         //}
-        yield return new WaitForSeconds(0.15f);
+        yield return new WaitForSeconds(WallJumpTime);
         wallCondition = 0;
     }
 
