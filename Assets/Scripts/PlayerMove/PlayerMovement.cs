@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
     private LineRenderer lr;
     private Hook hook;
     private ResetPosition p_Reset;
+    private Animator p_anim;
+    private SpriteRenderer p_spr;
 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpForce;
@@ -52,6 +54,8 @@ public class PlayerMovement : MonoBehaviour
         joint = GetComponent<DistanceJoint2D>();
         lr = GetComponent<LineRenderer>();
         p_Reset = GetComponent<ResetPosition>();
+        p_anim = GetComponent<Animator>();
+        p_spr = GetComponent<SpriteRenderer>();
         joint.enabled = false;
         isWire = false;
         isWallJump = false;
@@ -62,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         p_Reset.ResetPlayer += CheckFloor;
+        p_anim.SetBool("isWalk", false);
     }
 
     void Update()
@@ -74,6 +79,7 @@ public class PlayerMovement : MonoBehaviour
         HoldWall();
         Jump();
         xMove();
+        SpriteSwap();
         yHoldMove();
         yFellMove();
         PutDownWall();
@@ -86,10 +92,31 @@ public class PlayerMovement : MonoBehaviour
         return moveSpeed;
     }
 
+    private void SpriteSwap()
+    {
+        if(PlayerInput.instance.dir == 1f)
+        {
+            p_spr.flipX = true;
+        }
+        else if(PlayerInput.instance.dir == -1f)
+        {
+            p_spr.flipX = false;
+        }
+    }
+
     #region Move, Jump
     private void xMove()
     {
         if (wallCondition == 5) return;
+        if (PlayerInput.instance.dir == 0)
+        {
+            p_anim.SetBool("isWalk", false);
+        }
+        else
+        {
+            p_anim.SetBool("isWalk", true);
+        }
+
         moveDistance = new Vector2(PlayerInput.instance.dir * moveSpeed, playerRigid.velocity.y);
         if (!isWire)
         {
