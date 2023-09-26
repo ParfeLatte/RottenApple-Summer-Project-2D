@@ -10,10 +10,11 @@ public class CollisionCheck : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("GrapplingObj"))
+        if (collision.gameObject.CompareTag("Floor"))
         {
             ColPos = collision.contacts[0].point;
             if (OnCollision != null) OnCollision();
         }
     }
 }
+    
