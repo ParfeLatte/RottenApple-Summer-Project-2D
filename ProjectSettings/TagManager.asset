@@ -10,6 +10,8 @@ TagManager:
   - GoalObj
   - TargetObj
   - resetCol
+  - Enemy
+  - bullet
   layers:
   - Default
   - TransparentFX

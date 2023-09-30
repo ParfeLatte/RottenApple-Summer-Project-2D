@@ -13,6 +13,8 @@ public class PlayerInput : Singleton<PlayerInput>
     public Vector2 MousePosition { get; private set; }
     public bool LeftMouseClick { get; private set; }
 
+    public bool Fire { get; private set; }
+
     public bool Interact { get; private set; }
 
     // Start is called before the first frame update
@@ -49,6 +51,7 @@ public class PlayerInput : Singleton<PlayerInput>
     private void GetMouseInput()
     {
         LeftMouseClick = Input.GetMouseButtonDown(0);
+        Fire = Input.GetMouseButtonDown(1);
     }
 
     private void GetMousePos()
