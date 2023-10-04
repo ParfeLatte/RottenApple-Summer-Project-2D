@@ -1,0 +1,7 @@
+{
+    "npcName": "Miku",
+    "DialougeNumber": 0,
+    "Name": "Miku",
+    "StandingName": "Miku_1",
+    "Dialouge": "안녕 나는 미쿠야"
+}
