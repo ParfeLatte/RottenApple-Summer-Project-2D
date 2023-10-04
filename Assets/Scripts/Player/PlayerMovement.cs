@@ -94,6 +94,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void SpriteSwap()
     {
+        if (isWall) return;
         if(PlayerInput.instance.dir == 1f)
         {
             p_spr.flipX = true;
@@ -154,6 +155,8 @@ public class PlayerMovement : MonoBehaviour
                 JumpCount--;
             }
 
+            p_anim.SetBool("isJump", true);
+            p_anim.SetBool("isWall", false);
             jumpCounts[JumpCount].SetActive(false);
             if(JumpEvent != null)
             {
@@ -165,8 +168,6 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator WallJump()
     {
-        //isGrab = false;
-        //isWall = false;
         wallCondition = 5;
         if(WallJumpEvent != null)
         {
@@ -189,6 +190,8 @@ public class PlayerMovement : MonoBehaviour
         Floor = Physics2D.Raycast(transform.position, Vector2.down, 0.75f, LayerMask.GetMask("Floor"));
         if(Floor != null)
         {
+            p_anim.SetBool("isJump", false);
+            p_anim.SetBool("isWall", false);
             JumpCount = 2;
             CheckWallDir();
             foreach (GameObject i in jumpCounts)
@@ -220,6 +223,7 @@ public class PlayerMovement : MonoBehaviour
         anchorPos = Pos;
         JumpCount = 1;
         jumpCounts[JumpCount - 1].SetActive(true);
+        p_anim.SetBool("isJump", true);
     }
     private void CheckWire()
     {
@@ -241,6 +245,18 @@ public class PlayerMovement : MonoBehaviour
 
     #endregion
     #region WallMove
+
+    private void WallSpriteFlip()
+    {
+        if(walljumpDir == 1f)
+        {
+            p_spr.flipX = true;
+        }
+        else if(walljumpDir == -1f){
+            p_spr.flipX = false;
+        }
+    }
+
     private void HoldWall()
     {
         //벽에 붙어있을때 Shift를 누르면 벽에 붙음
@@ -250,6 +266,7 @@ public class PlayerMovement : MonoBehaviour
             if (PlayerInput.instance.ShiftDown)
             {
                 //isGrab = true;
+                isWall = true;
                 switch (wallCondition)
                 {
                     case 1:
@@ -262,7 +279,9 @@ public class PlayerMovement : MonoBehaviour
                         break;
                 }
                 Debug.Log("잡았음");
-                //이하 애니메이션 설정등 필요한 내용 추가
+                WallSpriteFlip();
+                p_anim.SetBool("isWall", true);
+                p_anim.SetBool("isJump", false);
             }
         }
     }
@@ -291,12 +310,9 @@ public class PlayerMovement : MonoBehaviour
     }
     private void yHoldMove()
     {
-        //if (!isWall) return;
-        //if (!isGrab) return;
         if (wallCondition != 2) return; 
         if (wallTime >= 0.7f)
         {
-            //isGrab = false;
             wallCondition = 4;
             return;
         }
@@ -340,6 +356,7 @@ public class PlayerMovement : MonoBehaviour
                 wallCondition = 1;
                 wallTime = 0;
             }
+            p_anim.SetBool("isJump", false);
         }
     }
 
@@ -353,20 +370,28 @@ public class PlayerMovement : MonoBehaviour
         right = Physics2D.Raycast(transform.position, Vector2.right, 0.75f, LayerMask.GetMask("Wall"));
         if (left.collider != null)
         {
+            isWall = true;
             walljumpDir = 1f;
             //wallCondition = 1;
             Debug.Log("왼쪽에 붙음");
+            p_spr.flipX = true;
+            p_anim.SetBool("isWall", true);
             return;
         }
         else if(right.collider != null)
         {
+            isWall = true;
             walljumpDir = -1f;
             //wallCondition = 1;  
             Debug.Log("오른쪽에 붙음");
+            p_spr.flipX = false;
+            p_anim.SetBool("isWall", true);
             return;
         }
         else
-        {   
+        {
+            isWall = false;
+            p_anim.SetBool("isWall", false);
             walljumpDir = 0f;
             wallCondition = 0;
         }
@@ -418,6 +443,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 wallCondition = 0;
             }
+            isWall = false;
+            p_anim.SetBool("isWall", false);
             Debug.Log("벽에서 떨어짐"); 
         }
         if (collision.gameObject.CompareTag("Floor"))

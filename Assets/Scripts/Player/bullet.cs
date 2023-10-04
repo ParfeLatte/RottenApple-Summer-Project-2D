@@ -7,10 +7,12 @@ public class bullet : MonoBehaviour
     private float _dir;
     [SerializeField] private float _speed;
 
+    private Animator _animator;
     private Rigidbody2D _rigid;
 
     private void Awake()
     {
+        _animator = GetComponent<Animator>();
         _rigid = GetComponent<Rigidbody2D>();
     }
 
@@ -28,13 +30,21 @@ public class bullet : MonoBehaviour
     private IEnumerator BulletDestroy()
     {
         yield return new WaitForSeconds(3f);
+        StartCoroutine(BulletBoom());
+    }
+
+    private IEnumerator BulletBoom()
+    {
+        _animator.SetTrigger("Boom");
+        _rigid.velocity = new Vector2(0, 0);
+        yield return new WaitForSeconds(0.4f);
         Destroy(gameObject);
     }
 
     private void BulletCollision()
-    {
+    {   
         StopCoroutine(BulletDestroy());
-        Destroy(gameObject);
+        StartCoroutine(BulletBoom());
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
