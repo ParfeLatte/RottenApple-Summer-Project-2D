@@ -1,0 +1,7 @@
+{
+    "npcName": "Miku",
+    "DialougeNumber": 1,
+    "Name": "Parfe",
+    "StandingName": "Miku_1",
+    "Dialouge": "반가워 나는 파르페야"
+}

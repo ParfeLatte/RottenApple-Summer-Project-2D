@@ -20,22 +20,34 @@ public class DialogueList
     }
     public void CheckFolder()
     {
-        FilePath = "D:\\GitHub\\RottenApple-Summer-Project-2D\\Assets\\Resources\\DialogueData\\" + name + "\\" + Setindex.ToString() + "\\" + indexNum + ".txt";
-        if (File.Exists(FilePath)){
-            DialogueData DataForAdd = JsonUtility.FromJson<DialogueData>(Resources.Load<TextAsset>(DataPath + indexNum).text);
-            _Talks.Add(DataForAdd);
-            indexNum++;
-            CheckFolder();
-        }
-        else
+        DialogueData DataForAdd = JsonUtility.FromJson<DialogueData>(Resources.Load<TextAsset>(DataPath + indexNum).text);
+        if(DataForAdd == null)
         {
-            Debug.Log("업는대???");
+            Debug.Log("파일이 존재하지 않습니다");
             return;
         }
+        _Talks.Add(DataForAdd);
+        indexNum++;
+        CheckFolder();
     }
-    
+
     public void DialogueEnd()
     {
         isEnd = true;
     }
 }
+
+
+//FilePath = "D:\\GitHub\\RottenApple-Summer-Project-2D\\Assets\\Resources\\DialogueData\\" + name + "\\" + Setindex.ToString() + "\\" + indexNum + ".txt";
+
+//if (File.Exists(FilePath)){
+//    DialogueData DataForAdd = JsonUtility.FromJson<DialogueData>(Resources.Load<TextAsset>(DataPath + indexNum).text);
+//    _Talks.Add(DataForAdd);
+//    indexNum++;
+//    CheckFolder();
+//}
+//else
+//{
+//    Debug.Log("업는대???");
+//    return;
+//}
