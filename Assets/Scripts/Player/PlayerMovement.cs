@@ -125,7 +125,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (isWire)
         {
-            playerRigid.AddForce(moveDistance * Time.deltaTime * 10);
+            playerRigid.AddForce(moveDistance * Time.deltaTime * 13);
         }
     }
     private void Jump()
@@ -187,7 +187,8 @@ public class PlayerMovement : MonoBehaviour
     private void CheckFloor()
     {
         RaycastHit2D Floor;
-        Floor = Physics2D.Raycast(transform.position, Vector2.down, 0.75f, LayerMask.GetMask("Floor"));
+        Floor = Physics2D.Raycast(transform.position, Vector2.down, 1.4f, LayerMask.GetMask("Floor"));
+        Debug.DrawRay(transform.position, Vector2.down * 1.4f, Color.red);
         if(Floor != null)
         {
             p_anim.SetBool("isJump", false);
@@ -196,6 +197,7 @@ public class PlayerMovement : MonoBehaviour
             CheckWallDir();
             foreach (GameObject i in jumpCounts)
             {
+                Debug.Log("점프 초기화");
                 i.SetActive(true);
             }
             wallTime = 0f;
@@ -222,7 +224,7 @@ public class PlayerMovement : MonoBehaviour
         joint.connectedAnchor = Pos;
         anchorPos = Pos;
         JumpCount = 1;
-        jumpCounts[JumpCount - 1].SetActive(true);
+        jumpCounts[JumpCount].SetActive(true);
         p_anim.SetBool("isJump", true);
     }
     private void CheckWire()
